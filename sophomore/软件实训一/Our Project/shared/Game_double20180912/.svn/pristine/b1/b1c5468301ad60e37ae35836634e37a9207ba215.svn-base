@@ -1,0 +1,79 @@
+#ifndef CONTROL_H
+#define CONTROL_H
+//该文件包含了所有实例化对象
+
+#include "classes.h"
+#include "loginmainwindow.h"
+
+//共有多少事件
+const int g_numOfEvents = 3;
+
+//指向玩家数组的指针
+CPlayer * players;
+
+//事件实例化
+CEvent * sj01 = new CCreditChangeEvent("sj01", "在图书馆内刻苦学习，加10个学分！", 10);
+CEvent * sj02 = new CCreditChangeEvent("sj02","因在食堂吃到蟑螂上吐下泻，无力学习，扣5个学分", -5);
+CEvent * sj03 = new CFatigueValueChangeEvent("sj03", "在小树林里被恶狗咬伤，住院3天", 3);
+CEvent * sj[] = {sj01, sj02, sj03};
+
+static CPoint p55(-29, -92, 0, nullptr, nullptr);
+CPoint p54(116, -26, 0, nullptr, &p55);
+CPoint p53(261, 40, 0, nullptr, &p54);
+CPoint p52(406, 106, 0, nullptr, &p53);
+CPoint p51(551, 172, 0, nullptr, &p52);
+CPoint p50(696, 238, 0, nullptr, &p51);
+CPoint p49(841, 304, 0, nullptr, &p50);
+CPoint p48(986, 370, 0 ,nullptr, &p49);
+CPoint p47(975, 576, 0 ,nullptr, &p48);
+CPoint p46(819, 716, 0 ,nullptr, &p47);
+CPoint p45(750, 927, 0 ,nullptr, &p46);
+CPoint p44(837, 998, 0 ,nullptr, &p45);
+CPoint p43(924, 1069, 0 ,nullptr, &p44);
+CPoint p42(1011, 1140, 0 ,nullptr, &p43);
+CPoint p41(1098, 1211, 0 ,nullptr, &p42);
+CPoint p40(1302, 1202, 0 ,nullptr, &p41);
+CPoint p39(1419, 1122, 0 ,nullptr, &p40);
+CPoint p38(1536, 1042, 0 ,nullptr, &p39);
+CPoint p37(1653, 962, 0 ,nullptr, &p38);
+CPoint p36(1920, 738, 0 ,nullptr, &p37);
+CPoint p35(2070, 594, 0 ,nullptr, &p36);
+CPoint p34(2220, 450, 0 ,nullptr, &p35);
+CPoint p33(2451, 152, 0 ,nullptr, &p34);
+CPoint p32(2532, -2, 0 ,nullptr, &p33);
+CPoint p31(2613, -156, 0 ,nullptr, &p32);
+CPoint p30(2513, -365, 0 ,nullptr, &p31);
+CPoint p29(2332, -420, 0 ,nullptr, &p30);
+CPoint p28(2151, -475, 0 ,nullptr, &p29);
+CPoint p27(1970, -530, 0 ,nullptr, &p28);
+CPoint p26(1789, -585, 0 ,nullptr, &p27);
+CPoint p25(1438, -730, 0 ,nullptr, &p26);
+CPoint p24(1268, -820, 0 ,nullptr, &p25);
+CPoint p23(1098, -910, 0 ,nullptr, &p24);
+CPoint p22(838, -870, 0 ,nullptr, &p23);
+CPoint p21(748, -740, 0 ,nullptr, &p22);
+CPoint p20(658, -610, 0 ,nullptr, &p21);
+CPoint p19(481, -530, 0 ,nullptr, &p20);
+CPoint p18(394, -580, 0 ,nullptr, &p19);
+CPoint p17(257, -580, 0 ,nullptr, &p18);
+CPoint p16(29, -630, 0 ,nullptr, &p17);
+CPoint p15(-149, -730, 0 ,nullptr, &p16);
+CPoint p14(-327, -830, 0 ,nullptr, &p15);
+CPoint p13(-215, -1080, 0 ,nullptr, &p14);
+CPoint p12(-30, -1260, 0 ,nullptr, &p13);
+CPoint p11(-135, -1290, 0 ,nullptr, &p12);
+CPoint p10(-460, -1165, 0 ,nullptr, &p11);
+CPoint p9(-680, -1010, 0 ,nullptr, &p10);
+CPoint p8(-900, -855, 0 ,nullptr, &p9);
+CPoint p7(-960, -600, 0 ,nullptr, &p8);
+CPoint p6(-800, -500, 0 ,nullptr, &p7);
+CPoint p5(-640, -400, 0 ,nullptr, &p6);
+CPoint p4(-480, -300, 0 ,nullptr, &p5);
+CPoint p3(-320, -200, 0 ,nullptr, &p4);
+CPoint p2(-160, -100, 0 ,nullptr, &p3);
+CPoint p1(0, 0, 0 ,nullptr, &p2);
+
+
+
+
+#endif

@@ -1,0 +1,5 @@
+﻿  test.cpp
+d:\code\datastructure\dshw\4.6.1\test.cpp(4): warning C4326: “main”的返回类型应为“int”而非“void”
+d:\code\datastructure\dshw\4.6.1\linkedqueue.h(56): warning C4715: “linkedQueue<int>::Rear”: 不是所有的控件路径都返回值
+d:\code\datastructure\dshw\4.6.1\linkedqueue.h(48): warning C4715: “linkedQueue<int>::Front”: 不是所有的控件路径都返回值
+  4.6.1.vcxproj -> D:\Code\DataStructure\DSHW\Debug\4.6.1.exe

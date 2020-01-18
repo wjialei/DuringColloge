@@ -1,0 +1,452 @@
+#include "loginmainwindow.h"
+#include "control.h"
+#include <QApplication>
+#include <QPainter>
+#include <QTime>
+#include <QMessageBox>
+
+gameWindow::gameWindow():
+    //设置按钮
+    LiftButton("向左",this),
+    RightButton("向右",this),
+    UpButton("向上",this),
+    DownButton("向下",this),
+    throwButton("",this),
+
+    //设置绘画区域
+    Paint(10,10,1500,1000), //设置绘画地图矩形区域
+    Paint1(1520,680,390,270),  //设置绘画小地图矩形区域（3.8,3.7）
+
+    //设置偏移量
+    Alloffset(0,0),
+    label("100%",this)
+{
+    pix = new QPixmap;
+    pix->load("../image/map");//加载大地图
+
+    pixx = new QPixmap;
+    pixx->load("../image/map1");//加载小地图
+
+    ratio= 1.00;             //初始化图片缩放比例
+    action = gameWindow::None;
+
+    pixW = 4857;            //设置图片尺寸
+    pixH = 3372;
+
+    //设置按钮位置，大小
+    LiftButton.setGeometry(1520,10,60,25);
+    connect(&LiftButton,SIGNAL(clicked()),this,SLOT(OnLiftClicked()));
+    RightButton.setGeometry(1520,40,60,25);
+    connect(&RightButton,SIGNAL(clicked()),this,SLOT(OnRightClicked()));
+    UpButton.setGeometry(1520,70,60,25);
+    connect(&UpButton,SIGNAL(clicked()),this,SLOT(onUpClicked()));
+    DownButton.setGeometry(1520,100,60,25);
+    connect(&DownButton,SIGNAL(clicked()),this,SLOT(onDownClicked()));
+    throwButton.setGeometry(1600,10,200,200);
+
+    //设置按钮形状
+    throwButton.setStyleSheet("border-image:url(../image/throw)");
+
+    //连接
+    connect(&throwButton,SIGNAL(clicked()),this,SLOT(throwDice()));
+
+
+    label.move(1740,130);
+
+    //调节gameWindow（总窗口）大小
+    resize(1820,1500);
+
+}
+
+
+bool gameWindow::event(QEvent * event)
+{
+    static bool press=false;
+    static QPoint PreDot;
+
+    if(event->type() == QEvent::MouseButtonPress )
+    {
+           QMouseEvent *mouse = dynamic_cast<QMouseEvent* >(event);
+
+           //判断鼠标是否是左键按下,且鼠标位置是否在绘画区域
+           if(mouse->button()==Qt::LeftButton &&Paint.contains(mouse->pos()))
+           {
+               press=true;
+               QApplication::setOverrideCursor(Qt::OpenHandCursor); //设置鼠标样式
+
+               PreDot = mouse->pos();
+           }
+
+    }
+else if(event->type() == QEvent::MouseButtonRelease)
+{
+    QMouseEvent *mouse = dynamic_cast<QMouseEvent* >(event);
+
+    //判断鼠标是否是左键释放,且之前是在绘画区域
+    if(mouse->button()==Qt::LeftButton && press )
+    {
+        QApplication::setOverrideCursor(Qt::ArrowCursor); //改回鼠标样式
+        press=false;
+    }
+}
+
+ if(event->type() == QEvent::MouseMove)              //移动图片
+ {
+      if(press)
+     {
+        QMouseEvent *mouse = dynamic_cast<QMouseEvent* >(event);
+
+        //设置偏移量
+        offset.setX(mouse->x() - PreDot.x());
+        offset.setY(mouse->y() - PreDot.y());
+        PreDot = mouse->pos();
+        action = gameWindow::Move;
+        this->update();
+     }
+ }
+return QWidget::event(event);
+}
+
+void gameWindow::paintEvent(QPaintEvent *event)
+{
+   QPainter painter(this);
+
+  int NowW = ratio *pixW;
+  int NowH = ratio *pixH;
+
+  if(action==gameWindow::Move)                    //移动
+{
+    int offsetx=Alloffset.x()+offset.x();
+    Alloffset.setX(offsetx);
+
+    int offsety=Alloffset.y()+offset.y();
+    Alloffset.setY(offsety);
+    action=gameWindow::None;
+}
+
+if(abs(Alloffset.x())>=(Paint.width()/2 + NowW/2 -10))    //限制X偏移值
+{
+    if(Alloffset.x()>0)
+        Alloffset.setX(Paint.width()/2 + NowW/2 -10);
+    else
+     Alloffset.setX(-Paint.width()/2 + -NowW/2 +10);
+}
+if(abs(Alloffset.y())>=(Paint.height()/2 + NowH/2 -10))    //限制Y偏移值
+{
+    if(Alloffset.y()>0)
+        Alloffset.setY(Paint.height()/2 + NowH/2 -10);
+    else
+     Alloffset.setY(-Paint.height()/2 + -NowH/2 +10);
+
+}
+
+int x = Paint.width()/2 + Alloffset.x() -NowW/2;
+if(x<0)
+    x=0;
+
+int y = Paint.height()/2 + Alloffset.y() -NowH/2;
+if(y<0)
+    y=0;
+
+int  sx = NowW/2 - Paint.width()/2 - Alloffset.x();
+if(sx<0)
+    sx=0;
+
+int  sy = NowH/2 - Paint.height()/2 - Alloffset.y();
+if(sy<0)
+    sy=0;
+
+int w =(NowW - sx)>Paint.width()? Paint.width() : (NowW - sx);
+if(w>(Paint.width()-x))
+    w = Paint.width()-x;
+
+int h =(NowH - sy)>Paint.height()? Paint.height() : (NowH - sy);
+if(h>(Paint.height()-y))
+    h = Paint.height()-y;
+
+
+  painter.drawRect(Paint.x()-1,Paint.y()-1,Paint.width()+1,Paint.height()+1); //画大框
+  painter.drawTiledPixmap(x+Paint.x(),y+Paint.y(),w,h,*pix,sx,sy); //绘画图形
+
+  painter.drawRect(Paint1.x()-1,Paint1.y()-1,Paint1.width()+1,Paint1.height()+1); //画小框
+  painter.drawTiledPixmap(Paint1.x(),Paint1.y(),Paint1.width(),Paint1.height(),*pixx,0,0); //绘画图形
+
+  painter.drawPixmap(Alloffset.x() + px +140,Alloffset.y() +py+440,QPixmap("../image/player"));//画人物
+  //qDebug()<<px<<py;
+
+  painter.drawPixmap(px/14.0+1660,py1/10.0+825,QPixmap("../image/cute1"));  //画小人物8.3,8.3
+}
+
+
+
+void gameWindow::onUpClicked()
+{
+    //按向上所对应的槽
+  action=gameWindow::Move;
+  offset.setX(0);
+  offset.setY(-20);
+
+  this->update();
+}
+
+void gameWindow::onDownClicked()
+{
+
+    //按向下所对应的槽
+  action=gameWindow::Move;
+  offset.setX(0);
+  offset.setY(20);
+  this->update();
+}
+
+void gameWindow::OnLiftClicked()
+{
+    //按向左所对应的槽
+  action=gameWindow::Move;
+  offset.setX(-20);
+  offset.setY(0);
+
+  this->update();
+}
+
+void gameWindow::OnRightClicked()
+{
+
+    //按向右所对应的槽
+  action=gameWindow::Move;
+  offset.setX(20) ;
+  offset.setY(0) ;
+
+  this->update();
+}
+
+//点击掷骰子按钮
+void gameWindow::throwDice(void)
+{
+    //判断当前是自己的回合吗
+    if(players[m_nowID].getName() == m_myName)
+    {
+        int r = roll(6);
+        //这边要在显示出来骰子的数字！！！！！！！！！！
+
+        sendDice(r);
+    }
+    else
+    {
+        QMessageBox::critical(nullptr, "", "还在上课呢，别乱动！", QMessageBox::Ok, QMessageBox::Ok);
+    }
+}
+
+//接受主窗口传来的本机用户的账号
+void gameWindow::setMyName(QString n)
+{
+    m_myName = n;
+}
+
+//接受主窗口传来的当前回合ID
+void gameWindow::roundBegin(int i)
+{
+    m_nowID = i;
+
+    //判断当前是自己的回合吗
+    if(players[m_nowID].getName() == m_myName)
+    {
+        QMessageBox::information(nullptr, "", "下课啦！请掷骰子！", QMessageBox::Ok, QMessageBox::Ok);
+    }
+}
+
+//接受主窗口传来的此回合的骰子点数
+void gameWindow::dice(int r)
+{
+    //人物移动
+    move(r);
+
+    //判断当前是自己的回合吗，若是则需要判断事件
+    if(players[m_nowID].getName() == m_myName)
+    {
+
+    }
+}
+
+
+void gameWindow::move(int r)
+{
+    //共要走r步
+    for(int i = 0; i < r; ++i)
+    {
+        //判断是否要拐弯
+        if((players[m_nowID].getPoint())->isBranch())
+        {
+            px = (((CBranchPoint*)(players[m_nowID].getPoint()))->m_turn)->rx();
+            py = (((CBranchPoint*)(players[m_nowID].getPoint()))->m_turn)->ry();
+        }
+        else
+        {
+            px = ((players[m_nowID].getPoint())->m_next)->rx();
+            py = ((players[m_nowID].getPoint())->m_next)->ry();
+        }
+
+        //绘图
+        update();
+    }
+}
+
+/*void gameWindow::move()
+{
+    if(n>=1&&n<=7)
+    {
+        update();
+        px-=160;
+        py-=100;
+        n++;
+    }
+    //李文正->纪中楼->工培中心
+
+    if(n>=8 && n<=11)
+    {
+        update();
+        px+=220;
+        py-=155;
+        n++;
+    }
+    //第二段路
+
+    if(n>=12 && n<=14)
+    {
+        update();
+        px+=105;
+        py+=30;
+        n++;
+    }
+    //第三段路
+
+    if(n>=15 && n<=16)
+    {
+        update();
+        px-=290;
+        py+=150;
+        n++;
+    }
+    //人文学院
+
+    if(n>=17 && n<=20)
+    {
+        update();
+        px+=178;
+        py+=100;
+        n++;
+    }
+    //经管学院
+
+    if(n>=21 && n<=22)
+
+    {
+        update();
+        px+=50;
+        py-=50;
+        n++;
+    }
+    //走圆弧
+
+    if(n>=23 && n<=25)
+
+    {
+        update();
+        px+=87;
+        py+=50;
+        n++;
+    }
+    //
+
+    if(n>=26 && n<=29)
+    {
+        update();
+        px+=90;
+        py-=130;
+        n++;
+    }
+    //化工楼->材料楼
+
+    if(n>=30 && n<=33)
+    {
+        update();
+        px+=170;
+        py+=90;
+        n++;
+    }
+    //
+
+    if(n>=34 && n<=39)
+    {
+        update();
+        px+=181;
+        py+=55;
+        n++;
+    }
+
+    if(n>=40 && n<=43)
+    {
+        update();
+        px-=81;
+        py+=154;
+        n++;
+    }
+
+    if(n>=44 && n<=47)
+    {
+        update();
+        px-=150;
+        py+=144;
+        n++;
+    }
+
+    if(n>=48 && n<=52)
+    {
+        update();
+        px-=117;
+        py+=80;
+        n++;
+    }
+
+    if(n>=53 && n<=58)
+    {
+        update();
+        px-=87;
+        py-=71;
+        n++;
+    }
+
+    if(n>=59 && n<=61)
+    {
+        update();
+        px+=156;
+        py-=140;
+        n++;
+    }
+
+    if(n>=62 && n<=69)
+    {
+        update();
+        px-=145;
+        py-=66;
+        n++;
+    }
+
+
+}*/
+
+/*void gameWindow::playerMove()
+{
+    QPainter p(pix);
+    p.drawPixmap(px,py,QPixmap("../image/player"));
+    //p.setCompositionMode(QPainter::CompositionMode_SourceIn);
+    //p.drawPixmap(px-50,py,QPixmap("../image/white"));
+
+    pixx = new QPixmap;
+    pixx->load("../image/map1");
+    QPainter p1(pixx);
+    p1.setCompositionMode(QPainter::CompositionMode_Clear);
+    p1.drawPixmap(px1,py1,QPixmap("../image/cute1"));  //8.3,8.3
+
+}*/
+

@@ -1,0 +1,78 @@
+/****第一类房产—“两江北路房”****/
+static CHouse h1("Ljb1",int * arr,5);
+static CHouse h2("Ljb2",int * arr,5);
+static CHouse h3("Ljb3",int * arr,5);
+static CHouse h4("Ljb4",int * arr,5);
+static CHouse h5("Ljb5",int * arr,5);
+static CHouse h6("Ljb6",int * arr,5);
+static CHouse h7("Ljb7",int * arr,5);
+static CHouse h8("Ljb8",int * arr,5);
+static CHouse h9("Ljb9",int * arr,5);
+
+/****第二类房产—“两江东路房”****/
+static CHouse h10("Ljd1",int * arr,5);
+static CHouse h11("Ljd2",int * arr,5);
+static CHouse h12("Ljd3",int * arr,5);
+static CHouse h13("Ljd4",int * arr,5);
+static CHouse h14("Ljd5",int * arr,5);
+
+/****第三类房产—“两江南路房”****/
+static CHouse h15("Ljn1",int * arr,5);
+static CHouse h16("Ljn2",int * arr,5);
+static CHouse h17("Ljn3",int * arr,5);
+static CHouse h18("Ljn4",int * arr,5);
+
+/****第四类房产—“两江西路房”****/
+static CHouse h19("Ljx1",int * arr,5);
+static CHouse h20("Ljx2",int * arr,5);
+static CHouse h21("Ljx3",int * arr,5);
+static CHouse h22("Ljx4",int * arr,5);
+static CHouse h23("Ljx5",int * arr,5);
+static CHouse h24("Ljx6",int * arr,5);
+static CHouse h25("Ljx7",int * arr,5);
+
+/****第五类房产—“南工路房”****/
+static CHouse h26("Ngl1",int * arr2,10);
+static CHouse h27("Ngl2",int * arr2,10);
+static CHouse h28("Ngl3",int * arr2,10);
+static CHouse h29("Ngl4",int * arr2,10);
+static CHouse h30("Ngl5",int * arr2,10);
+static CHouse h31("Ngl6",int * arr2,10);
+static CHouse h32("Ngl7",int * arr2,10);
+
+/****第六类房产—“中央大道房”****/
+static CHouse h33("Zydd1",int * arr3,5);
+static CHouse h34("Zydd2",int * arr3,5);
+static CHouse h35("Zydd3",int * arr3,5);
+
+/****第七类房产—“东南路房”****/
+static CHouse h36("Dnl1",int * arr4,5);
+
+/****第八类房产—“小树林房”****/
+static CHouse h37("Xsl1",int * arr5,5);
+static CHouse h38("Xsl2",int * arr5,5);
+static CHouse h39("Xsl3",int * arr5,5);
+static CHouse h40("Xsl4",int * arr5,5);
+static CHouse h41("Xsl5",int * arr5,5);
+static CHouse h42("Xsl6",int * arr5,5);
+static CHouse h43("Xsl7",int * arr5,5);
+static CHouse h44("Xsl8",int * arr5,5);
+
+/****第九类房产—“宿舍区”****/
+static CHouse h55("M4",int * arr6,10);//梅1-4
+static CHouse h56("M5",int * arr6,10);//梅5-8
+static CHouse h57("M9",int * arr6,10);//梅9
+static CHouse h58("T1",int * arr6,10);//桃12
+static CHouse h59("T3",int * arr6,10);//桃34
+static CHouse h60("T5",int * arr6,10);//桃56
+static CHouse h61("J1",int * arr6,10);//橘园区
+
+/****第十类房产—“岔路区”****/
+static CHouse h62("Clnm",int * arr7,5);
+static CHouse h63("Clnm2",int * arr7,5);//田家炳楼旁拐角
+static CHouse h64("Clxz",int * arr7,5); //行政楼
+static CHouse h65("Clxm",int * arr7,5);
+static CHouse h66("Clbm",int * arr7,5);
+static CHouse h67("Clbm2",int * arr7,5);
+static CHouse h68("Clbm3",int * arr7,5);//材料楼
+static CHouse h69("Clcn",int * arr7,5); //菜鸟驿站

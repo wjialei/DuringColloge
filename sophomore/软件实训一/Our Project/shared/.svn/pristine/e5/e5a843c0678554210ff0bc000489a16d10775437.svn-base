@@ -1,0 +1,30 @@
+#ifndef CONTROL_H
+#define CONTROL_H
+//该文件包含了所有实例化对象
+
+#include "classes.h"
+#include "gameWindow.h"
+#include "loginmainwindow.h"
+#include "registmainwindow.h"
+#include "roommainwindow.h"
+
+//共有多少事件
+const int g_numOfEvents = 3;
+
+//指向玩家数组的指针
+CPlayer * players;
+
+//事件实例化
+CEvent * sj01 = new CCreditChangeEvent("sj01", "在图书馆内刻苦学习，加10个学分！", 10);
+CEvent * sj02 = new CCreditChangeEvent("sj02","因在食堂吃到蟑螂上吐下泻，无力学习，扣5个学分", -5);
+CEvent * sj03 = new CFatigueValueChangeEvent("sj02", "在小树林里被恶狗咬伤，住院3天", 3);
+CEvent * sj[] = {sj01, sj02, sj03};
+
+CEvent sj00[] = {*sj01, *sj02};
+
+CPoint * p02 = new CPoint();
+CPoint * p01 = new CPoint(140, 140 ,2 ,sj00 , p02);
+
+
+
+#endif

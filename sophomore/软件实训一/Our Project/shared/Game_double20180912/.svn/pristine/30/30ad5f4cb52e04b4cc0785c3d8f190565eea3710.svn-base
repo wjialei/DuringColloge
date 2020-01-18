@@ -1,0 +1,29 @@
+#include "roommainwindow.h"
+#include "ui_roommainwindow.h"
+
+RoomMainWindow::RoomMainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::RoomMainWindow)
+{
+     ui->setupUi(this);
+     setWindowTitle("东南大学霸");
+
+     //加载等待动画
+     movie = new QMovie(":/image/stay.gif");
+
+}
+
+RoomMainWindow::~RoomMainWindow()
+{
+    delete ui;
+}
+
+void RoomMainWindow::on_RoomPlaypushButton_clicked()
+{
+    //显示等待动画
+    this->ui->RoomLoadinglabel->setMovie(movie);
+    movie->start();
+
+    //发送游戏创建消息给主窗口
+    SendGameCreateMessage();
+}

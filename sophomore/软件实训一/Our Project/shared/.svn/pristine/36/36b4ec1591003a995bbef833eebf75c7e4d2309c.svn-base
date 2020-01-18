@@ -1,0 +1,28 @@
+#ifndef REGISTMAINWINDOW_H
+#define REGISTMAINWINDOW_H
+
+#include <QMainWindow>
+
+namespace Ui {
+class RegistMainWindow;
+}
+
+class RegistMainWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    explicit RegistMainWindow(QWidget *parent = nullptr);
+    ~RegistMainWindow();
+
+private slots:
+    void on_RegistRegistpushButton_clicked();
+
+signals:
+    void sendRegistMessage(QString);//发送注册消息给主窗口
+
+private:
+    Ui::RegistMainWindow *ui;
+};
+
+#endif // REGISTMAINWINDOW_H

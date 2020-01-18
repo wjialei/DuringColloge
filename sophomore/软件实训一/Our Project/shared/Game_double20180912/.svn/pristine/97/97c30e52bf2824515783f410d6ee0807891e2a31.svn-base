@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/image">
+        <file>DNDX.png</file>
+        <file>Book.jpg</file>
+        <file>Tree.jpg</file>
+    </qresource>
+</RCC>

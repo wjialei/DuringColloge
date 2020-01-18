@@ -1,0 +1,30 @@
+#ifndef FUNCTION_H
+#define FUNCTION_H
+
+#include<QString>
+#include<QStringList>
+#include <QDebug>
+#include"widget.h"
+
+class Function:public Widget
+{
+public:
+    Function(QStringList info,QString message,int scoketnumber=-1);
+    ~Function();
+private:
+    void RegistrationFunction(QString account,QString password);//注册函数
+    void SignINFunction(QString account,QString password);//登录函数
+    void SignOutFunction(QString account,QString password);//登出函数
+    void GameCreateFunction(QString account1);//创建游戏函数
+    //void InviteFriendFunction(QString invitee);//邀请函数
+    //void InviteReturnFunction(QString inviter);//邀请反馈函数
+    void JudgeFunction(void);//下一个玩家判断函数
+    void MessageTransmissionFunction(void);//消息传输函数
+    //void TalkFunction(QString receiver);//聊天函数
+    QString Message;
+    static int nowid;
+    int scoketnum;
+};
+
+
+#endif

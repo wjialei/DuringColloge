@@ -1,0 +1,146 @@
+1.登陆界面
+	登录区
+		label-账号
+		label-密码
+		textbox-账号
+		textbox-密码
+		pushbutton-登陆
+	动画区
+		背景（无控件）
+	注册区
+		pushbutton-注册
+
+
+2.注册界面
+	注册区
+		label-账号
+		label-密码
+		label-重复密码
+		label-此账号已注册（bool）
+		textbox-账号
+		textbox-密码
+		pushbutton-注册
+3.注册成功界面
+	弹窗区 
+		label-注册成功
+		pushbutton-确认
+4.游戏参数设置界面+好友列表
+	参数区
+		label-难度设置
+		radiobutton-学渣
+		radiobutton-学霸
+		pushbutton-进入游戏
+	好友区
+		listwidget-好友列表
+		label-输入账号
+		textbox-账户
+		pushbutton-邀请好友
+5.专业选择界面
+	选择区
+		pushbutton-计软
+		pushbutton-土木
+		pushbutton-交通
+	介绍区
+		label-计软
+		label-土木
+		label-交通
+6.经过专业楼
+	触发区
+		label-经过（某一）专业专属建筑物，是否转专业
+		pushbutton-是
+		pushbutton-否
+7.游戏主界面
+	日期区
+		label-第几周第几天
+	数据区	
+		label-学分
+		label-专业
+	按钮区
+		pushbutton-退出游戏
+		pushbutton-掷骰子
+	结果区	
+		label-您掷出的数字为（某一数值），前进（某一数值）步
+	绘图区
+		jpg（无控件）
+8.岔路界面
+	选择区
+		label-前方遇到岔路，是否进入
+		pushbutton-是
+		pushbutton-否
+9.购买地产界面
+	购买区
+		label-您经过（某一）空地，售价（某一数值），是否购买
+		pushbutton-购买
+		pushbutton-取消
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+10.地产升级界面
+	升级区
+		label-您经过（某一）您的地产，升级价格（某一数值），是否11.升级
+		pushbutton-升级
+		pushbutton-取消
+12.命运界面
+	抽卡区
+		label-您获得一次机会卡抽取资格
+		pushbutton-卡1
+		pushbutton-卡2
+		pushbutton-卡3
+13.机会界面
+	抽卡区
+		label-您获得一次机会卡抽取资格
+		pushbutton-卡1
+		pushbutton-卡2
+		pushbutton-卡3
+14.触发事件界面
+	确认区
+		label-触发某一事件
+		pushbutton-确认
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+15.交过路费界面
+	缴费区
+		label-您经过(某人)的区域，须缴纳（某一数量）的学分
+		pushbutton-缴纳
+16.胜利界面1-保研证书（学分高于某一参数）
+	胜利区
+		label-由于您的努力学习，已被保研
+		pushbutton-确认
+17.失败界面-退学通知书
+	失败区	
+		label-您的学分已清零，立即退学
+		pushbutton-确认
+18.过起点加学分界面
+	弹窗区	
+		label-您经过起点（李文正图书馆），获得学分
+		pushbutton-确认
+19.帮助界面（游戏规则）
+	帮助区
+		label-游戏规则
+		pushbutton-确认
+

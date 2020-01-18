@@ -1,0 +1,63 @@
+#include "registmainwindow.h"
+#include "ui_registmainwindow.h"
+#include <QMessageBox>
+
+RegistMainWindow::RegistMainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::RegistMainWindow)
+{
+    ui->setupUi(this);
+    setWindowTitle("东南大学霸");
+    setWindowFlags(Qt::WindowCloseButtonHint);
+    ui->RegistPasswordlineEdit->setEchoMode(QLineEdit::Password);
+    ui->RegistAgainPasswordlineEdit->setEchoMode(QLineEdit::Password);
+
+    //设置注册界面gif背景
+    QMovie *movie;
+    movie = new QMovie(":/image/Waved.gif");
+    ui->RegistWavelabel->setMovie(movie);
+    movie->start();
+
+    //按键设置
+    ui->RegistRegistpushButton->setStyleSheet("QPushButton{border-image: url(:/image/Regist.png);}"
+                                        "QPushButton:hover{border-image: url(:/image/RegistHover.png);}"
+                                       "QPushButton:pressed{border-image: url(:/image/RegistPush.png);}");
+}
+
+RegistMainWindow::~RegistMainWindow()
+{
+    delete ui;
+}
+
+void RegistMainWindow::on_RegistRegistpushButton_clicked()
+{
+    QString account=ui->RegistIDlineEdit->text();
+    QString password=ui->RegistPasswordlineEdit->text();
+    QString password2=ui->RegistAgainPasswordlineEdit->text();
+
+    //检测两次输入的密码是否一致
+    if(password!=password2)
+    {
+        QMessageBox *msgBox;
+        msgBox = new QMessageBox("Wrong",		//--这里是设置消息框标题
+            "Password inconsistent",						//--这里是设置消息框显示的内容
+            QMessageBox::Critical,							//--这里是在消息框显示的图标
+            QMessageBox::Ok | QMessageBox::Default,		//---这里是显示消息框上的按钮情况
+            QMessageBox::Cancel | QMessageBox::Escape,	//---这里与 键盘上的 escape 键结合。当用户按下该键，消息框将执行cancel按钮事件
+            0);														//---这里是 定义第三个按钮， 该例子 只是 了显示2个按钮
+        msgBox->show();
+        return;
+    }
+    else
+    {
+        QString message="zc|";
+        message+=account;
+        message+="|";
+        message+=password;
+
+        //发送注册消息给主窗口
+        emit sendRegistMessage(message);
+    }
+
+
+}

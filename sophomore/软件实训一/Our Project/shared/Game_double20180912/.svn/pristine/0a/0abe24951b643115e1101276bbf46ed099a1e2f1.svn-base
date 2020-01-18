@@ -1,0 +1,462 @@
+#include "classes.h"
+#include <QString>
+#include <QMessageBox>
+
+
+
+/**************坐标点类**************/
+//构造函数，参数分别为：x坐标，y坐标，事件数，事件数组，下一个点（函数体为空）
+CPoint::CPoint(int x, int y, int num, CEvent* e, CPoint* n)
+:QPoint(x, y), m_numOfEvents(num), m_events(e), m_next(n)
+{
+
+}
+
+//默认构造函数（函数体为空）
+CPoint::CPoint()
+{
+
+}
+
+//析构函数，函数体为空
+CPoint::~CPoint()
+{
+
+}
+
+//设置下一个点
+void CPoint::setNext(CPoint * n)
+{
+    m_next = n;
+}
+
+//判断是不是三叉点
+bool CPoint::isBranch(void) const
+{
+    return false;
+}
+
+//构造函数，参数分别为：x坐标，y坐标，事件数，事件数组，直行到达的点，转弯到达的点（函数体为空）
+CBranchPoint::CBranchPoint(int x, int y, int num, CEvent * e, CPoint * n, CPoint * t): CPoint(x, y, num, e, n), m_turn(t)
+{
+
+}
+
+//判断是否为三叉点
+bool CBranchPoint::isBranch(void) const
+{
+    return true;
+}
+
+//析构函数，函数体为空
+CBranchPoint::~CBranchPoint()
+{
+
+}
+
+
+
+/**************玩家类**************/
+//构造函数，初始化所有数据成员
+CPlayer::CPlayer(QString & n):m_name(n)
+{
+    //初始化角色的坐标（图书馆门口）
+    m_location->setX(0);
+    m_location->setY(0);
+
+    //初始化疲劳值为0
+    m_fatigueValue = 0;
+
+    //初始化学分为100
+    m_credit = 100;
+
+    //载入角色的外观
+    //m_appearance = XXXXXX;
+}
+
+//默认构造函数
+CPlayer::CPlayer(void)
+{
+    //初始化角色的坐标（图书馆门口）
+    m_location->setX(0);
+    m_location->setY(0);
+
+    //初始化疲劳值为0
+    m_fatigueValue = 0;
+
+    //初始化学分为100
+    m_credit = 100;
+
+    //载入角色的外观
+    //m_appearance = XXXXXX;
+}
+
+//析构函数（函数体为空）
+CPlayer::~CPlayer()
+{
+
+}
+
+//设置角色名称
+void CPlayer::setName(QString n)
+{
+    m_name = n;
+}
+
+//返回角色昵称
+QString CPlayer::getName(void) const
+{
+    return m_name;
+}
+
+//返回当前学分
+int CPlayer::getCredit(void) const
+{
+    return m_credit;
+}
+
+//加学分，参数为要加减的学分
+void CPlayer::addCredit(int & c)
+{
+    m_credit += c;
+}
+
+//返回当前疲劳值
+int CPlayer::getFatigueValue(void) const
+{
+    return m_fatigueValue;
+}
+
+//加疲劳值，参数为要加减的值
+void CPlayer::addFatigueValue(int & c)
+{
+    m_fatigueValue += c;
+}
+
+//返回角色当前所在的点
+CPoint * CPlayer::getPoint(void) const
+{
+    return m_location;
+}
+
+//重新设置角色所在的点
+void CPlayer::setPoint(CPoint * p)
+{
+    m_location = p;
+}
+
+//重新设置角色外观
+void CPlayer::setAppearance(QPixmap pm)
+{
+    m_appearance = pm;
+}
+
+//返回角色外观
+QPixmap CPlayer::getAppearance(void) const
+{
+    return m_appearance;
+}
+
+//人物移动函数
+void CPlayer::move(int & r)
+{
+    for(int i = 0;i < r; ++i)
+    {
+        CPoint * next;
+
+        //判断角色当前是否在三叉点，若是则判断是否拐弯
+        if(m_location->isBranch())
+        {
+            //若骰子是奇数，则拐弯；若是偶数则是走直线
+            if(r%2)
+            {
+                next = ((CBranchPoint*)m_location)->m_turn;
+            }
+            else
+            {
+                next = m_location->m_next;
+            }
+        }
+        else
+        {
+            next = m_location->m_next;
+        }
+
+        //若两点的连线的斜率不存在
+        if(m_location->rx() == next->rx())
+        {
+            int x = m_location->rx(), y = m_location->ry();
+            for(; y <= next->ry(); y += 16)
+            {
+                //根据坐标绘图
+            }
+        }
+        else
+        {
+            int x = m_location->rx(), y = m_location->ry();
+            double k = ((double)next->ry() - (double)y) / ((double)next->rx() - (double)x);
+            double b = y - k * x;
+            for(; x <= next->rx(); x += 16)
+            {
+                //根据坐标绘图
+            }
+        }
+    }
+}
+
+
+
+/**************地产类**************/
+//构造函数，参数分别为地产名称、包含每个等级对应的过路费的数组、地产的价格
+CHouse::CHouse(QString name, int arr[], int & p):m_name(name), m_owner(nullptr), m_level(0), m_fee(arr), m_price(p)
+{
+    m_upgradePrice = m_price/2;
+}
+
+//析构函数（函数体为空）
+CHouse::~CHouse(void)
+{
+
+}
+
+//返回当前等级的过路费
+int CHouse::getFee(void) const
+{
+    return m_fee[m_level];
+}
+
+//返回该地产的名称
+QString CHouse::getName(void) const
+{
+    return m_name;
+}
+
+//返回该地产的价格
+int CHouse::getPrice(void) const
+{
+    return m_price;
+}
+
+//返回该地产升级所需的价格
+int CHouse::getUpgradePrice(void) const
+{
+    return m_upgradePrice;
+}
+
+//升级地产
+void CHouse::Upgrade(void)
+{
+    ++m_level;
+}
+
+//设置拥有者
+void CHouse::setOwner(CPlayer &owner)
+{
+    m_owner = &owner;
+}
+
+//返回当前等级
+int CHouse::getLevel(void) const
+{
+    return m_level;
+}
+
+//返回房屋的拥有者
+CPlayer* CHouse::getOwner(void) const
+{
+    return m_owner;
+}
+
+
+
+/**************事件类**************/
+//抽象基类
+//构造函数，函数体为空
+CEvent::CEvent(QString id, QString content): m_id(id), m_content(content)
+{
+
+}
+
+//析构函数，函数体为空
+CEvent::~CEvent()
+{
+
+}
+
+//事件处理函数
+void CEvent::process(CPlayer & p)
+{
+    QMessageBox msgbox(QMessageBox::NoIcon, m_id, m_content);
+    msgbox.exec();
+}
+
+//返回事件ID
+QString CEvent::getID(void) const
+{
+    return m_id;
+}
+
+//学分改变的事件
+//构造函数，函数体为空
+CCreditChangeEvent::CCreditChangeEvent(QString  id, QString  content, int c):CEvent (id, content), m_change(c)
+{
+
+}
+
+//事件处理函数
+void CCreditChangeEvent::process(CPlayer & p)
+{
+    CEvent::process(p);
+    p.addCredit(m_change);
+}
+
+//虚构函数，函数体为空
+CCreditChangeEvent::~CCreditChangeEvent()
+{
+
+}
+
+//疲劳值改变的事件
+//构造函数。函数体为空
+CFatigueValueChangeEvent::CFatigueValueChangeEvent(QString  id, QString  content, int c):CEvent (id, content), m_change(c)
+{
+
+}
+
+//事件处理函数
+void CFatigueValueChangeEvent::process(CPlayer & p)
+{
+    CEvent::process(p);
+    p.addFatigueValue(m_change);
+}
+
+//析构函数函数体为空
+CFatigueValueChangeEvent::~CFatigueValueChangeEvent()
+{
+
+}
+
+//房产事件
+//构造函数，函数体为空
+CHouseEvent::CHouseEvent(QString  id, QString  content, CHouse & h):CEvent(id, content), m_house(&h)
+{
+
+}
+
+//析构函数，函数体为空
+CHouseEvent::~CHouseEvent()
+{
+
+}
+
+//事件处理函数
+void CHouseEvent::process(CPlayer & p)
+{
+    //如果当前房产没有拥有者
+    if(m_house->getOwner() == nullptr)
+    {
+        QMessageBox msgbox(QMessageBox::NoIcon,
+                           "是否购买" + m_house->getName() +"?", "该地产价格" + QString::number(m_house->getPrice()),
+                           QMessageBox::Yes | QMessageBox::No
+                           );
+        //确认购买
+        if(msgbox.exec() == QMessageBox::Yes)
+        {
+            //检测是否有足够的学分
+            if(p.getCredit() <= m_house->getPrice())
+            {
+                QMessageBox::critical(nullptr, "", "没有足够的学分！", QMessageBox::Ok, QMessageBox::Ok);
+            }
+            else
+            {
+                //扣除学分
+                int c =  -m_house->getPrice();
+                p.addCredit(c);
+
+                //设置拥有者
+                m_house->setOwner(p);
+
+                //提示
+                QMessageBox::information(nullptr, "", "购买成功！", QMessageBox::Ok, QMessageBox::Ok);
+            }
+        }
+    }
+    //若有拥有者
+    else
+    {
+        //检测拥有者是自己吗；若是则升级地产
+        if((m_house->getOwner()) == &p)
+        {
+            QMessageBox msgbox(QMessageBox::NoIcon,
+                               "是否升级该地产?", "该地产价格升级的价格：" + QString::number(m_house->getUpgradePrice()),
+                               QMessageBox::Yes | QMessageBox::No
+                               );
+            if(msgbox.exec() == QMessageBox::Yes)
+            {
+                //检测是否有足够的学分
+                if(p.getCredit() <= m_house->getUpgradePrice())
+                {
+                    QMessageBox::critical(nullptr, "", "没有足够的学分！", QMessageBox::Ok, QMessageBox::Ok);
+                }
+                else
+                {
+                    //扣除学分
+                    int c =  -m_house->getUpgradePrice();
+                    p.addCredit(c);
+
+                    //提示
+                    QMessageBox::information(nullptr, "", "升级成功！", QMessageBox::Ok, QMessageBox::Ok);
+                }
+            }
+        }
+        //若路过其他角色的地产
+        else
+        {
+            QMessageBox::warning(nullptr,
+                                 "",
+                                 "您经过" + p.getName() + "的地产，需缴纳" + QString::number(m_house->getFee()) + "学分！",
+                                 QMessageBox::Ok,
+                                 QMessageBox::Ok);
+            //加减学分
+            int c = -m_house->getFee();
+            p.addCredit(c);
+            c = m_house->getFee();
+            (m_house->getOwner())->addCredit(c);
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

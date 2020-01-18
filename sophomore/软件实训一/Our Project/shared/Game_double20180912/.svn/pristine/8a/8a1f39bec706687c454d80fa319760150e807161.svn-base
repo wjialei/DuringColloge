@@ -1,0 +1,88 @@
+#ifndef CONTROL_H
+#define CONTROL_H
+//该文件包含了所有实例化对象
+
+#include "classes.h"
+
+
+//共有多少事件
+const int g_numOfEvents = 11;
+
+//指向玩家数组的指针
+static CPlayer * players;
+
+//事件实例化
+static CEvent * sj01 = new CCreditChangeEvent("sj01", "在图书馆内刻苦学习，加10个学分！", 10);
+static CEvent * sj02 = new CCreditChangeEvent("sj02","因在食堂吃到蟑螂上吐下泻，无力学习，扣5个学分", -5);
+static CEvent * sj03 = new CFatigueValueChangeEvent("sj03", "在小树林里被恶狗咬伤，住院3天", 3);
+static CEvent * sj04 = new CCreditChangeEvent("sj04", "在纪中楼认真听报告，加5个学分！", 5);
+static CEvent * sj05 = new CFatigueValueChangeEvent("sj05","在工培中心不幸被火花烧伤，住院2天",2);
+static CEvent * sj06 = new CCreditChangeEvent("sj06", "在人文学院咖啡厅喝咖啡无心学习，减5个学分！", -5);
+static CEvent * sj07 = new CFatigueValueChangeEvent("sj07","经管学院门前认识漂亮小姐姐，停留2回合！",2);
+static CEvent * sj08 = new CCreditChangeEvent("sj08","在土交楼参加结构竞赛，获得第一名，加10学分！",10);
+static CEvent * sj09 = new CFatigueValueChangeEvent("sj09","考试周通宵学习，体力不支，住进校医院，停留3回合",3);
+static CEvent * sj10 = new CCreditChangeEvent("sj10","在梅园体育场认真锻炼身体，加5学分",5);
+static CEvent * sj11 = new CFatigueValueChangeEvent("sj11","在菜鸟驿站取快递，快递太多，体力不支，停留2回合",2);
+CEvent * sj[] = {sj01, sj02, sj03};
+
+//坐标点实例化
+static CPoint p55(-29, -92, 0, nullptr, nullptr);
+static CPoint p54(116, -26, 0, nullptr, &p55);
+static CPoint p53(261, 40, 0, nullptr, &p54);
+static CPoint p52(406, 106, 0, nullptr, &p53);
+static CPoint p51(551, 172, 0, nullptr, &p52);
+static CPoint p50(696, 238, 0, nullptr, &p51);
+static CPoint p49(841, 304, 0, nullptr, &p50);
+static CPoint p48(986, 370, 0 ,nullptr, &p49);
+static CPoint p47(975, 576, 0 ,nullptr, &p48);
+static CPoint p46(819, 716, 0 ,nullptr, &p47);
+static CPoint p45(750, 927, 0 ,nullptr, &p46);
+static CPoint p44(837, 998, 0 ,nullptr, &p45);
+static CPoint p43(924, 1069, 0 ,nullptr, &p44);
+static CPoint p42(1011, 1140, 0 ,nullptr, &p43);
+static CPoint p41(1098, 1211, 0 ,nullptr, &p42);
+static CPoint p40(1302, 1202, 0 ,nullptr, &p41);
+static CPoint p39(1419, 1122, 0 ,nullptr, &p40);
+static CPoint p38(1536, 1042, 0 ,nullptr, &p39);
+static CPoint p37(1653, 962, 0 ,nullptr, &p38);
+static CPoint p36(1920, 738, 0 ,nullptr, &p37);
+static CPoint p35(2070, 594, 0 ,nullptr, &p36);
+static CPoint p34(2220, 450, 0 ,nullptr, &p35);
+static CPoint p33(2451, 152, 0 ,nullptr, &p34);
+static CPoint p32(2532, -2, 0 ,nullptr, &p33);
+static CPoint p31(2613, -156, 0 ,nullptr, &p32);
+static CPoint p30(2513, -365, 0 ,nullptr, &p31);
+static CPoint p29(2332, -420, 0 ,nullptr, &p30);
+static CPoint p28(2151, -475, 0 ,nullptr, &p29);
+static CPoint p27(1970, -530, 0 ,nullptr, &p28);
+static CPoint p26(1789, -585, 0 ,nullptr, &p27);
+static CPoint p25(1438, -730, 0 ,nullptr, &p26);
+static CPoint p24(1268, -820, 0 ,nullptr, &p25);
+static CPoint p23(1098, -910, 0 ,nullptr, &p24);
+static CPoint p22(838, -870, 0 ,nullptr, &p23);
+static CPoint p21(748, -740, 0 ,nullptr, &p22);
+static CPoint p20(658, -610, 0 ,nullptr, &p21);
+static CPoint p19(481, -530, 0 ,nullptr, &p20);
+static CPoint p18(394, -580, 0 ,nullptr, &p19);
+static CPoint p17(257, -580, 0 ,nullptr, &p18);
+static CPoint p16(29, -630, 0 ,nullptr, &p17);
+static CPoint p15(-149, -730, 0 ,nullptr, &p16);
+static CPoint p14(-327, -830, 0 ,nullptr, &p15);
+static CPoint p13(-215, -1080, 0 ,nullptr, &p14);
+static CPoint p12(-30, -1260, 0 ,nullptr, &p13);
+static CPoint p11(-135, -1290, 0 ,nullptr, &p12);
+static CPoint p10(-460, -1165, 0 ,nullptr, &p11);
+static CPoint p9(-680, -1010, 0 ,nullptr, &p10);
+static CPoint p8(-900, -855, 0 ,nullptr, &p9);
+static CPoint p7(-960, -600, 0 ,nullptr, &p8);
+static CPoint p6(-800, -500, 0 ,nullptr, &p7);
+static CPoint p5(-640, -400, 0 ,nullptr, &p6);
+static CPoint p4(-480, -300, 0 ,nullptr, &p5);
+static CPoint p3(-320, -200, 0 ,nullptr, &p4);
+static CPoint p2(-160, -100, 0 ,nullptr, &p3);
+static CPoint p1(0, 0, 0 ,nullptr, &p2);
+
+
+
+
+#endif

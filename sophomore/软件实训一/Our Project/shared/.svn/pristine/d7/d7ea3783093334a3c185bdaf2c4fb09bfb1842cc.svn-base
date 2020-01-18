@@ -1,0 +1,69 @@
+#include "cmessagehanding.h"
+#include "control.h"
+
+CMessageHanding::CMessageHanding(QStringList info)
+{
+ MessageJudge(info);
+}
+
+void CMessageHanding::MessageJudge(QStringList info)
+{
+    if(info[0]=="sj")
+    {
+        EventTriggering(info);
+        return;
+    }
+
+    if(info[0]=="zc")
+    {
+        RegistrationFeedback(info);
+        return;
+    }
+
+    if(info[0]=="cj")
+    {
+        CreateFeedback(info);
+        return;
+    }
+
+    if(info[0]=="sx")
+    {
+        LoginFeedback(info);
+        return;
+    }
+}
+
+void CMessageHanding::EventTriggering(QStringList info)
+{
+    //找到事件消息对应的事件处理函数
+    for(int i = 0; i < g_numOfEvents; ++i)
+    {
+        if(sj[i]->getID() == (info[0] + info[2]))
+        {
+            sj[i]->process(players[info[1].toInt()]);
+            break;
+        }
+    }
+}
+
+void CMessageHanding::LoginFeedback(QStringList info)
+{
+    if(info[1].toInt())
+    {
+        RoomMainWindow room;
+        room.show();
+    }
+    else
+    {
+
+    }
+}
+
+void CMessageHanding::RegistrationFeedback(QStringList info)
+{
+
+}
+void CMessageHanding::CreateFeedback(QStringList info)
+{
+
+}

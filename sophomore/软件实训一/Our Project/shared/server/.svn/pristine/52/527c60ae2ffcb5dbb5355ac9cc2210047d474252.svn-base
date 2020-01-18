@@ -1,0 +1,277 @@
+#include<function.h>
+#include<QString>
+#include<QStringList>
+#include <QWidget>
+#include <QTcpServer>
+#include <QTcpSocket>
+#include <QList>
+#include <QDebug>
+
+int Function::nowid=1;
+
+//对接收的消息进行分类
+Function::Function(QStringList info,QString message,int scoketnumber)
+{
+    Message=message;
+    scoketnum=scoketnumber;
+    if(info[0]=="sj")//跳转消息传输函数
+    {MessageTransmissionFunction();return;}
+    if(info[0]=="js")//跳转结束函数
+    {JudgeFunction();return;}
+    if(info[0]=="zc")//跳转注册函数
+    {RegistrationFunction(info[1],info[2]);return;}
+    if(info[0]=="dl")//跳转登录函数
+    {SignINFunction(info[1],info[2]);return;}
+    if(info[0]=="tc")//跳转登出函数
+    {SignOutFunction(info[1],info[2]);return;}
+    if(info[0]=="cj")//跳转创建函数
+    {GameCreateFunction(info[1],info[2],info[3],info[4]);return;}
+    if(info[0]=="yq")//跳转邀请函数
+    {InviteFriendFunction(info[1],info[2]);return;}
+    if(info[0]=="sf")//跳转邀请反馈函数
+    {InviteReturnFunction(info[1],info[2],info[3]);return;}
+}
+
+//Function函数的析构函数，用于关闭数据库的连接
+Function::~Function()
+{
+    AccountData.close();
+}
+
+//消息传递函数，将游戏消息传递至其他客户端
+void Function::MessageTransmissionFunction()
+{
+    sendMessage(Message);
+}
+
+//下一个玩家判断函数，接收结束消息，发送下一个玩家的消息
+void Function::JudgeFunction()
+{
+    nowid++;
+    if(nowid>socket_list->length())
+    nowid-=socket_list->length();
+    message="ks|"+QString::number(nowid,10);
+}
+
+//注册函数，接收账号密码，调整数据库，返回注册成功的消息
+void Function::RegistrationFunction(QString account,QString password)
+{
+    if (!AccountData.open())
+    {
+        qDebug() << "Error: Failed to connect database." << AccountData.lastError();
+    }
+    else
+    {
+        QSqlQuery sql_query;
+
+        //找到max_id
+        QString select_max_sql = "select max(id) from student";
+        int max_id = 0;
+        sql_query.prepare(select_max_sql);
+        if(!sql_query.exec())
+        {
+            qDebug() << sql_query.lastError();
+        }
+        else
+        {
+            while(sql_query.next())
+            {
+                max_id = sql_query.value(0).toInt();
+                qDebug() << QString("max id:%1").arg(max_id);
+            }
+        }
+
+        //往数据库中加入新的注册用户
+        QString insert_sql = "insert into account values (?, ?, ?, ?)";
+        sql_query.prepare(insert_sql);
+        sql_query.addBindValue(max_id+1);
+        sql_query.addBindValue(account);
+        sql_query.addBindValue(password);
+        sql_query.addBindValue(0);
+        if(!sql_query.exec())
+        {
+            qDebug() << sql_query.lastError();
+        }
+        else
+        {
+            qDebug() << "inserted "<<account;
+        }
+    }
+    QString Qstr="zj|t";
+    sendMessage(Qstr,scoketnum);
+
+}
+
+//登录函数，接收账号密码，发送给该客户端在线信息
+void Function::SignINFunction(QString account,QString password)
+{
+    QSqlQuery sql_query;
+    QString update_sql = "update account set isOnLine = :isOnLine where account = :account and password = :password";
+    sql_query.prepare(update_sql);
+    sql_query.bindValue(":isOnLine", 1);
+    sql_query.bindValue(":scoketnum", scoketnum);
+    sql_query.bindValue(":account", account);
+    sql_query.bindValue(":password", password);
+    if(!sql_query.exec())
+    {
+        qDebug() << sql_query.lastError();
+    }
+    else
+    {
+        qDebug() << "updated!";
+    }
+
+
+
+    QString Qstr="sx";
+    QString select_sql = "select account,isOnLine from student where ID = :ID ";
+    if(!sql_query.exec(select_sql))
+    {
+        qDebug()<<sql_query.lastError();
+    }
+    else
+    {
+        while(sql_query.next())
+        {
+             if(sql_query.value(1).toBool())
+             {
+                 Qstr+="|";
+                 Qstr+=sql_query.value(0).toString();
+
+             }
+
+        }
+    }
+
+    sendMessage(Qstr,scoketnum);
+
+}
+
+//登出函数，接受账号密码，发送给所有客户端该账号下线的消息
+void Function::SignOutFunction(QString account,QString password)
+{
+    QSqlQuery sql_query;
+    QString update_sql = "update account set isOnLine = :isOnLine where account = :account and password = :password";
+    sql_query.prepare(update_sql);
+    sql_query.bindValue(":isOnLine", 0);
+    sql_query.bindValue(":account", account);
+    sql_query.bindValue(":password", password);
+    if(!sql_query.exec())
+    {
+        qDebug() << sql_query.lastError();
+    }
+    else
+    {
+        qDebug() << "updated!";
+    }
+     QString Qstr="xx|";
+     Qstr+=account;
+     sendMessage(Qstr);
+}
+
+//游戏创建函数，接收四个账号，创建一张新表，发送开始消息
+void Function::GameCreateFunction(QString account1,QString account2,QString account3,QString account4)
+{
+    QSqlQuery sql_query;
+    QString create_sql = "create table game (id int primary key, account varchar(30))";
+    sql_query.prepare(create_sql);
+    if(!sql_query.exec())
+    {
+        qDebug() << "Error: Fail to create table." << sql_query.lastError();
+    }
+    else
+    {
+        qDebug() << "Table created!";
+    }
+    QString insert_sql = "insert into game values (?, ?)";
+    sql_query.prepare(insert_sql);
+    sql_query.addBindValue(1);
+    sql_query.addBindValue(account1);
+    if(!sql_query.exec())
+    {
+        qDebug() << sql_query.lastError();
+    }
+    else
+    {
+        qDebug() << "inserted account1!";
+    }
+    sql_query.prepare(insert_sql);
+    sql_query.addBindValue(2);
+    sql_query.addBindValue(account2);
+    if(!sql_query.exec())
+    {
+        qDebug() << sql_query.lastError();
+    }
+    else
+    {
+        qDebug() << "inserted account2!";
+    }
+    sql_query.prepare(insert_sql);
+    sql_query.addBindValue(3);
+    sql_query.addBindValue(account3);
+    if(!sql_query.exec())
+    {
+        qDebug() << sql_query.lastError();
+    }
+    else
+    {
+        qDebug() << "inserted account3!";
+    }
+    sql_query.prepare(insert_sql);
+    sql_query.addBindValue(4);
+    sql_query.addBindValue(account4);
+    if(!sql_query.exec())
+    {
+        qDebug() << sql_query.lastError();
+    }
+    else
+    {
+        qDebug() << "inserted account4!";
+    }
+    QString Qstr="zj|t";
+    sendMessage(Qstr,scoketnum);
+    Qstr="ks|1";
+    sendMessage(Qstr);
+}
+
+//好友邀请函数，向被邀请的账号发送邀请消息
+void Function::InviteFriendFunction(QString inviter,QString invitee)
+{
+    QSqlQuery sql_query;
+    int num;
+    QString select_sql = "select scoketnum from account where account = :account";
+    sql_query.bindValue(":account", invitee);
+    if(!sql_query.exec(select_sql))
+    {
+        qDebug()<<sql_query.lastError();
+    }
+    else
+    {
+        while(sql_query.next())
+        {
+             num = sql_query.value(0).toInt();
+        }
+    }
+    sendMessage(message,num);
+}
+
+//邀请返回函数，向邀请发出方返回邀请信息
+void Function::InviteReturnFunction(QString TorF,QString inviter,QString invitee)
+{
+    QSqlQuery sql_query;
+    int num;
+    QString select_sql = "select scoketnum from account where account = :account";
+    sql_query.bindValue(":account", inviter);
+    if(!sql_query.exec(select_sql))
+    {
+        qDebug()<<sql_query.lastError();
+    }
+    else
+    {
+        while(sql_query.next())
+        {
+             num = sql_query.value(0).toInt();
+        }
+    }
+    sendMessage(message,num);
+}

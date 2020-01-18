@@ -1,0 +1,35 @@
+#ifndef LOGINMAINWINDOW_H
+#define LOGINMAINWINDOW_H
+
+#include <QMainWindow>
+#include <QWidget>
+#include <QtNetwork>
+#include <QTcpSocket>
+#include <QStringList>
+
+namespace Ui {
+class LoginMainWindow;
+}
+
+class LoginMainWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    explicit LoginMainWindow(QWidget *parent = nullptr);
+    ~LoginMainWindow();
+
+    void sendMessage(QString Qmessage);
+    void readMessage();
+    void tcpServerConnect();
+private slots:
+    void on_RegistpushButton_clicked();
+    void on_LoginpushButton_clicked();
+
+private:
+    Ui::LoginMainWindow *ui;
+    QTcpSocket *m_tcpsocket;
+
+};
+
+#endif // LOGINMAINWINDOW_H

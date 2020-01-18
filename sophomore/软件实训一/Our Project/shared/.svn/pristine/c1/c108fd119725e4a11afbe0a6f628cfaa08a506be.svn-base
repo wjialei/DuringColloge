@@ -1,0 +1,23 @@
+#ifndef ROOMMAINWINDOW_H
+#define ROOMMAINWINDOW_H
+
+#include <QMainWindow>
+#include"loginmainwindow.h"
+
+namespace Ui {
+class RoomMainWindow;
+}
+
+class RoomMainWindow : public LoginMainWindow
+{
+    Q_OBJECT
+
+public:
+    explicit RoomMainWindow(QWidget *parent = nullptr);
+    ~RoomMainWindow();
+
+private:
+    Ui::RoomMainWindow *ui;
+};
+
+#endif // ROOMMAINWINDOW_H

@@ -1,0 +1,63 @@
+#include "loginmainwindow.h"
+#include "ui_loginmainwindow.h"
+#include"registmainwindow.h"
+#include"cmessagehanding.h"
+#include"roommainwindow.h"
+LoginMainWindow::LoginMainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::LoginMainWindow)
+{
+    ui->setupUi(this);
+}
+
+LoginMainWindow::~LoginMainWindow()
+{
+    delete ui;
+}
+
+void LoginMainWindow::tcpServerConnect()
+{
+    m_tcpsocket = new QTcpSocket(this);
+    m_tcpsocket->abort();
+    m_tcpsocket->connectToHost("47.99.76.252",6666);
+    connect(m_tcpsocket,SIGNAL(readyRead()),
+            this,SLOT(readMessage()));
+}
+
+void LoginMainWindow::sendMessage(QString Qmessage)
+{
+     QString string = Qmessage;
+
+     QByteArray message;
+     QDataStream out(&message,QIODevice::WriteOnly);
+     out.setVersion(QDataStream::Qt_5_4);
+     out<<string;
+     qDebug() << "cli string" << string;
+     m_tcpsocket->write(message);
+}
+
+void LoginMainWindow::readMessage()
+{
+    QDataStream in(m_tcpsocket);
+    in.setVersion(QDataStream::Qt_5_4);
+    QString greeting;
+    in >> greeting;
+    QStringList info = greeting.split("|");
+    CMessageHanding CMH(info);
+}
+
+
+void LoginMainWindow::on_RegistpushButton_clicked()
+{
+    RegistMainWindow r;
+    r.show();
+}
+
+void LoginMainWindow::on_LoginpushButton_clicked()
+{
+    QString message="dl|";
+    message+=ui->LoginIDlineEdit->text();
+    message+="|";
+    message+=ui->LoginPasswordlineEdit->text();
+    sendMessage(message);
+}

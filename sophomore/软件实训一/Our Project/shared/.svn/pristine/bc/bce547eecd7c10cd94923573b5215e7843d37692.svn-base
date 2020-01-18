@@ -1,0 +1,179 @@
+#include "loginmainwindow.h"
+#include "ui_loginmainwindow.h"
+#include "registmainwindow.h"
+#include "roommainwindow.h"
+#include "control.h"
+#include <QMessageBox>
+
+//构造函数
+LoginMainWindow::LoginMainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::LoginMainWindow)
+{
+    ui->setupUi(this);
+
+    //与服务器建立链接
+    m_tcpsocket = new QTcpSocket(this);
+    m_tcpsocket->abort();
+    m_tcpsocket->connectToHost("47.99.76.252",6666);
+    connect(m_tcpsocket,SIGNAL(readyRead()),
+            this,SLOT(readMessage()));
+
+    //实例化每个窗口
+    m_registWin = new RegistMainWindow();
+    m_roomWin = new RoomMainWindow();
+    m_gameWin = new gameWindow();
+
+    //建立connect
+    connect(m_registWin, SIGNAL(sendRegistMessage(QString)), this, SLOT(regist(QString)));
+}
+
+//析构函数
+LoginMainWindow::~LoginMainWindow()
+{
+    delete ui;
+}
+
+//向服务器发送消息
+void LoginMainWindow::sendMessage(QString Qmessage)
+{
+     QString string = Qmessage;
+
+     QByteArray message;
+     QDataStream out(&message,QIODevice::WriteOnly);
+     out.setVersion(QDataStream::Qt_5_4);
+     out<<string;
+     qDebug() << "cli string" << string;
+     m_tcpsocket->write(message);
+}
+
+
+//读取服务器传来的消息
+void LoginMainWindow::readMessage()
+{
+    QDataStream in(m_tcpsocket);
+    in.setVersion(QDataStream::Qt_5_4);
+    QString greeting;
+    in >> greeting;
+    QStringList info = greeting.split("|");
+
+    MessageJudge(info);
+}
+
+//选择消息相应的消息处理函数
+void LoginMainWindow::MessageJudge(QStringList info)
+{
+    //事件
+    if(info[0]=="sj")
+    {
+        EventTriggering(info);
+        return;
+    }
+
+    //注册
+    if(info[0]=="zc")
+    {
+        RegistrationFeedback(info);
+        return;
+    }
+
+    //创建游戏
+    if(info[0]=="cj")
+    {
+        CreateFeedback(info);
+        return;
+    }
+
+    //上线
+    if(info[0]=="sx")
+    {
+        LoginFeedback(info);
+        return;
+    }
+}
+
+//事件消息处理函数
+void LoginMainWindow::EventTriggering(QStringList info)
+{
+    //找到事件消息对应的事件处理函数
+    for(int i = 0; i < g_numOfEvents; ++i)
+    {
+        if(sj[i]->getID() == (info[0] + info[2]))
+        {
+            sj[i]->process(players[info[1].toInt()]);
+            break;
+        }
+    }
+}
+
+//上线消息处理函数（即登陆反馈函数）
+void LoginMainWindow::LoginFeedback(QStringList info)
+{
+    if(info[1].toInt())
+    {
+        //登陆成功则跳转到房间界面
+        m_roomWin->show();
+
+        //隐藏主窗口
+        this->hide();
+    }
+    else
+    {
+        QMessageBox::critical(nullptr, "Error!", "登陆失败！", QMessageBox::Ok, QMessageBox::Ok);
+    }
+}
+
+//注册反馈消息处理函数
+void LoginMainWindow::RegistrationFeedback(QStringList info)
+{
+    if(info[1].toInt())
+    {
+        QMessageBox::information(nullptr, "Success!", "注册成功！", QMessageBox::Ok, QMessageBox::Ok);
+        m_registWin->close();
+    }
+    else
+    {
+        QMessageBox::critical(nullptr, "Error!", "注册失败！", QMessageBox::Ok, QMessageBox::Ok);
+    }
+}
+
+
+void LoginMainWindow::CreateFeedback(QStringList info)
+{
+
+}
+
+
+//注册按钮
+void LoginMainWindow::on_RegistpushButton_clicked()
+{
+    //显示注册窗口
+    m_registWin->show();
+}
+
+//登陆按钮的槽函数
+void LoginMainWindow::on_LoginpushButton_clicked()
+{
+    //发送账号密码给服务器验证
+    QString message="dl|"+ui->LoginIDlineEdit->text()+"|"+ui->LoginPasswordlineEdit->text();
+    sendMessage(message);
+}
+
+//接受注册窗口发来的信号，并发送注册消息给服务器
+void LoginMainWindow::regist(QString message)
+{
+    sendMessage(message);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

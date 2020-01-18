@@ -1,0 +1,35 @@
+/****RegistMainWindow.h->private:中****/
+
+    //定义键盘Esc键
+    virtual void keyPressEvent(QKeyEvent *);
+    //重新定义界面关闭按钮
+    virtual void closeEvent(QCloseEvent * );
+
+/****RegitMainWindow.cpp末尾****/
+
+//名称：退出键定义
+//描述：用户按下Esc键后关闭注册界面
+//作成日期：2018/9/9
+//参数：QKeyEvent *
+//返回值类型：void
+//作者：王明钊
+void RegistMainWindow::keyPressEvent(QKeyEvent * event )
+{
+    if(event->key() == Qt::Key_Escape)
+    {
+        this->close();
+    }
+}
+
+//名称：界面关闭按钮重定义
+//描述：在用户关闭界面的同时清空已输入的ID和密码
+//作成日期：2018/9/9
+//参数：QCloseEvent *
+//返回值类型：void
+//作者：王明钊
+void RegistMainWindow::closeEvent(QCloseEvent * cevent)
+{
+    ui->RegistIDlineEdit->clear();
+    ui->RegistPasswordlineEdit->clear();
+    ui->RegistAgainPasswordlineEdit->clear();
+}

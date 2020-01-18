@@ -1,0 +1,26 @@
+#include "classes.h"
+#include "loginmainwindow.h"
+#include "registmainwindow.h"
+#include "roommainwindow.h"
+#include "gameWindow.h"
+
+// 登录函数
+void Login()
+{
+    LoginMainWindow log;
+    log.show();
+}
+
+// 创建房间函数
+void Room()
+{
+    RoomMainWindow room;
+    room.show();
+}
+
+// 游戏进行中函数
+void Game()
+{
+    gameWindow game;
+    game.show();
+}

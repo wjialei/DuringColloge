@@ -1,0 +1,240 @@
+#include "loginmainwindow.h"
+#include "ui_loginmainwindow.h"
+#include "registmainwindow.h"
+#include "roommainwindow.h"
+#include "control.h"
+#include "classes.h"
+#include <QMessageBox>
+#include <QString>
+
+//构造函数
+LoginMainWindow::LoginMainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::LoginMainWindow)
+{
+    ui->setupUi(this);
+    setWindowTitle("东南大学霸");
+    //ui->LoginPasswordlineEdit->setEchoMode(QLineEdit::Password);
+
+    //与服务器建立链接
+    m_tcpsocket = new QTcpSocket(this);
+    m_tcpsocket->abort();
+    m_tcpsocket->connectToHost("223.3.106.121",6666);
+
+    //使用匿名函数来处理收到的消息
+    connect(m_tcpsocket,
+            &QTcpSocket::readyRead,
+            this,
+            [=](){
+                QDataStream in(m_tcpsocket);
+                in.setVersion(QDataStream::Qt_5_4);
+                QString greeting;
+                in >> greeting;
+                QStringList info = greeting.split("|");
+
+                MessageJudge(info);
+            }
+            );
+
+    //实例化每个窗口
+    m_registWin = new RegistMainWindow();
+    m_roomWin = new RoomMainWindow();
+    m_gameWin = new gameWindow();
+
+    //与每个窗口的信号建立connect
+    connect(m_registWin, SIGNAL(sendRegistMessage(QString)), this, SLOT(regist(QString)));
+    connect(m_roomWin, SIGNAL(sendGameCreateMessage(void)), this, SLOT(gameCreate(void)));
+    connect(this, SIGNAL(sendRoundBeginMessage(int)), m_gameWin, SLOT(roundBegin(int)));
+    connect(this, SIGNAL(sendName(QString)), m_gameWin, SLOT(setMyName(QString)));
+    connect(m_gameWin, SIGNAL(sendDice(int)), this, SLOT(Dice(int)));
+    connect(this, SIGNAL(sendDice(int)), m_gameWin, SLOT(dice(int)));
+}
+
+//析构函数
+LoginMainWindow::~LoginMainWindow()
+{
+    delete ui;
+}
+
+//向服务器发送消息
+void LoginMainWindow::sendMessage(QString Qmessage)
+{
+     QString string = Qmessage;
+
+     QByteArray message;
+     QDataStream out(&message,QIODevice::WriteOnly);
+     out.setVersion(QDataStream::Qt_5_4);
+     out<<string;
+     qDebug() << "cli string" << string;
+     m_tcpsocket->write(message);
+}
+
+//选择服务器的反馈消息的相应的消息处理函数（消息按发生频率从小到大排列）
+void LoginMainWindow::MessageJudge(QStringList info)
+{
+    //回合开始
+    if(info[0] == "ks")
+    {
+        BeginFunc(info);
+        return;
+    }
+
+    //骰子点数
+    if(info[0] == "sz")
+    {
+        DiceFeedback(info);
+        return;
+    }
+
+    //事件
+    if(info[0] == "sj")
+    {
+        EventTriggering(info);
+        return;
+    }
+
+    //注册
+    if(info[0] == "zc")
+    {
+        RegistrationFeedback(info);
+        return;
+    }
+
+    //创建游戏
+    if(info[0] == "cj")
+    {
+        CreateFeedback(info);
+        return;
+    }
+
+    //上线
+    if(info[0] == "sx")
+    {
+        LoginFeedback(info);
+        return;
+    }
+}
+
+//事件消息处理函数
+void LoginMainWindow::EventTriggering(QStringList info)
+{
+    //找到事件消息对应的事件处理函数
+    for(int i = 0; i < g_numOfEvents; ++i)
+    {
+        if(sj[i]->getID() == (info[0] + info[2]))
+        {
+            sj[i]->process(players[info[1].toInt()]);
+            break;
+        }
+    }
+}
+
+//上线消息处理函数（即登陆反馈消息处理函数）
+void LoginMainWindow::LoginFeedback(QStringList info)
+{
+    if(info[1].toInt())
+    {
+        //登陆成功则跳转到房间界面
+        m_roomWin->show();
+
+        //隐藏主窗口
+        this->hide();
+    }
+    else
+    {
+        QMessageBox::critical(nullptr, "Error!", "登陆失败！", QMessageBox::Ok, QMessageBox::Ok);
+
+        //登陆失败则删去当前用户，重新登录
+        m_user = nullptr;
+    }
+}
+
+//注册反馈消息处理函数
+void LoginMainWindow::RegistrationFeedback(QStringList info)
+{
+    if(info[1].toInt())
+    {
+        QMessageBox::information(nullptr, "Success!", "注册成功！", QMessageBox::Ok, QMessageBox::Ok);
+        m_registWin->close();
+    }
+    else
+    {
+        QMessageBox::critical(nullptr, "Error!", "注册失败！", QMessageBox::Ok, QMessageBox::Ok);
+    }
+}
+
+//游戏创建反馈消息处理函数
+void LoginMainWindow::CreateFeedback(QStringList info)
+{
+    players = new CPlayer[4];
+
+    //初始化角色数组
+    for(int i = 0; i<4; ++i )
+        players[i] = CPlayer(info[i+1]);
+
+    //显示游戏窗口
+    m_gameWin->show();
+}
+
+//回合开始消息的处理函数
+void LoginMainWindow::BeginFunc(QStringList info)
+{
+    sendRoundBeginMessage(info[1].toInt());
+}
+
+//骰子点数消息反馈函数
+void LoginMainWindow::DiceFeedback(QStringList info)
+{
+    sendDice(info[1].toInt());
+}
+
+
+
+//注册按钮的槽函数
+void LoginMainWindow::on_RegistpushButton_clicked()
+{
+    //显示注册窗口
+    m_registWin->show();
+}
+
+//登陆按钮的槽函数
+void LoginMainWindow::on_LoginpushButton_clicked()
+{
+    //发送账号密码给服务器验证
+    QString message="dl|"+ui->LoginIDlineEdit->text()+"|"+ui->LoginPasswordlineEdit->text();
+    sendMessage(message);
+
+    //保存当前用户的账号
+    m_user = ui->LoginIDlineEdit->text();
+}
+
+
+
+//接受注册窗口发来的信号，并发送注册消息给服务器
+void LoginMainWindow::regist(QString message)
+{
+    sendMessage(message);
+}
+
+//接受房间窗口传来的信号，并发送游戏创建消息给服务器
+void LoginMainWindow::gameCreate(void)
+{
+    QString message = "cj|" + m_user;
+    sendMessage(message);
+}
+
+//接受游戏窗口传来的骰子数，并传给服务器
+void LoginMainWindow::dice(int r)
+{
+    //把r以十进制的形式转化为QString
+    sendMessage("sz|" + QString::number(r, 10));
+}
+
+
+
+
+
+
+
+
+

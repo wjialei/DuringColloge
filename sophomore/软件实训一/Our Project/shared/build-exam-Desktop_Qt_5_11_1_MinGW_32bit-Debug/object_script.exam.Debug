@@ -1,0 +1,13 @@
+INPUT(
+./debug\qrc_resource.o
+./debug\main.o
+./debug\loginmainwindow.o
+./debug\classes.o
+./debug\gamewindow.o
+./debug\registmainwindow.o
+./debug\roommainwindow.o
+./debug\moc_loginmainwindow.o
+./debug\moc_gamewindow.o
+./debug\moc_registmainwindow.o
+./debug\moc_roommainwindow.o
+);

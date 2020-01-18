@@ -1,0 +1,47 @@
+int 前进（int a,int num）//a为当前位置，num为骰子数
+{
+	bool judge=false;//true走岔路，false走主路
+	if num%2==0
+		judge=true;
+	else
+		judge=false;
+	for(int i=0;i<num;i++)
+	{
+		if a==08(南门岔路)||18（北门岔路）||24（北门）||26（焦廷标馆）
+		{
+			a= 是否走岔路（a,judge）；
+		}
+		if a==30(工培中心）||35（桃12）||37（玫瑰园）
+		{
+			a= 是否特殊点（a）
+		}
+		a++;
+		//这里放入移动动画
+	}
+	return a;
+
+
+}
+int 是否走岔路（int a,bool judge）
+{
+	
+	if judge
+		return a;
+	elseif a==08
+		return 10;
+	elseif a==18
+		return 23;
+	elseif a==24 
+		return 30;
+	elseif a==26
+		return 35;
+}
+int 是否为特殊点（int a）
+{
+	if a==30
+		return 15;
+	if a==35
+		return 00;
+	if a==37 
+		return 06;
+}

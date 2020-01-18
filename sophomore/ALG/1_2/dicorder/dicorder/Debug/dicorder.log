@@ -1,0 +1,4 @@
+﻿  test.cpp
+d:\code\alg\1_2\dicorder\dicorder\test.cpp(32): warning C4244: “+=”: 从“double”转换到“int”，可能丢失数据
+d:\code\alg\1_2\dicorder\dicorder\test.cpp(18): warning C4101: “count”: 未引用的局部变量
+  dicorder.vcxproj -> D:\Code\ALG\1_2\dicorder\Debug\dicorder.exe

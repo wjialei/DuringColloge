@@ -1,0 +1,3 @@
+﻿  test.cpp
+d:\code\datastructure\dshw\4.10.2\test.cpp(4): warning C4326: “main”的返回类型应为“int”而非“void”
+  4.10.2.vcxproj -> D:\Code\DataStructure\DSHW\Debug\4.10.2.exe

@@ -1,0 +1,162 @@
+#ifndef CLASSES_H
+#define CLASSES_H
+
+#include <QPixmap>
+#include <QString>
+#include <QPoint>
+#include <QTime>
+#include <QtGlobal>
+
+class CPlayer;
+class CPoint;
+class CHouse;
+class CEvent;
+
+//以下类的数据成员和成员函数的解释均在CPP文件里
+
+/**************坐标点类**************/
+class CPoint:public QPoint
+{
+public:
+    CPoint();
+    CPoint(int , int , int , CEvent*, CPoint*);
+    virtual ~CPoint();
+
+    virtual bool isBranch() const;
+    void setNext(CPoint *);
+public:
+    CPoint * m_next;
+private:
+    int m_numOfEvents;
+    CEvent * m_events;
+};
+class CBranchPoint: public CPoint
+{
+public:
+    CBranchPoint(int , int , int , CEvent*, CPoint*, CPoint*);
+    virtual ~CBranchPoint();
+
+    virtual bool isBranch(void) const;
+
+public:
+    CPoint * m_turn;
+};
+
+/**************玩家类**************/
+ class CPlayer
+{
+public:
+    CPlayer(QString &);
+    CPlayer(void);
+    ~CPlayer();
+
+    QString getName(void) const;
+    void setName(QString);
+
+    int getCredit(void) const;
+    void addCredit(int &);
+
+    int getFatigueValue(void) const;
+    void addFatigueValue(int &);
+
+    CPoint * getPoint(void) const;
+    void setPoint(CPoint &);
+
+    void setAppearance(QPixmap *);
+    QPixmap * getAppearance(void) const;
+
+    void move(int &);
+
+ private:
+    QString m_name;
+    CPoint * m_location;
+    int m_credit;
+    int m_fatigueValue;
+    QPixmap * m_appearance;//此为一个指向包含四张图片的数组的指针
+};
+
+/**************地产类**************/
+class CHouse
+{
+public:
+    CHouse(QString, int [], int &);
+    ~CHouse(void);
+    int getFee(void) const;
+    void Upgrade(void);
+    void setOwner(CPlayer &);
+    int getLevel(void) const;
+    int getPrice(void) const;
+    int getUpgradePrice(void) const;
+    QString getName(void) const;
+    CPlayer * getOwner(void) const;
+
+private:
+    QString m_name;
+    CPlayer * m_owner;
+    int m_price;
+    int m_upgradePrice;
+    int m_level;
+    int * m_fee;
+};
+
+/**************事件类**************/
+//抽象基类
+class CEvent
+{
+public:
+    CEvent(QString , QString);
+    virtual ~CEvent(void);
+    virtual void process(CPlayer &);
+    virtual QString getID(void) const;
+private:
+    QString m_id;
+    QString m_content;
+};
+
+//学分改变的事件
+class CCreditChangeEvent: public CEvent
+{
+public:
+    CCreditChangeEvent(QString , QString , int);
+    virtual ~CCreditChangeEvent();
+    virtual void process(CPlayer &);
+private:
+    int m_change;
+};
+
+//疲劳值改变的事件
+class CFatigueValueChangeEvent: public CEvent
+{
+public:
+    CFatigueValueChangeEvent(QString , QString , int );
+    virtual ~CFatigueValueChangeEvent();
+    virtual void process(CPlayer &);
+private:
+    int m_change;
+};
+
+//房产事件
+class CHouseEvent:public CEvent
+{
+public:
+    CHouseEvent(QString , QString , CHouse &);
+    virtual ~CHouseEvent();
+    virtual void process(CPlayer &);
+private:
+    CHouse * m_house;
+};
+
+
+
+/**************工具函数**************/
+//随机数生成函数，参数为随机数的范围[1~x]
+int roll(int x)
+{
+    //先用当前时间设置随机数种子
+    qsrand(QTime(0,0,0).secsTo(QTime::currentTime()));
+    return (qrand()%x)+1;
+}
+
+
+
+#endif // CLASSES_H

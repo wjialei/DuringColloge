@@ -1,0 +1,54 @@
+#ifndef LOGINMAINWINDOW_H
+#define LOGINMAINWINDOW_H
+
+#include "classes.h"
+#include "gameWindow.h"
+#include "registmainwindow.h"
+#include "roommainwindow.h"
+
+#include <QMainWindow>
+#include <QWidget>
+#include <QtNetwork>
+#include <QTcpSocket>
+#include <QStringList>
+
+namespace Ui {
+class LoginMainWindow;
+}
+
+class LoginMainWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    explicit LoginMainWindow(QWidget *parent = nullptr);
+    virtual ~LoginMainWindow();
+    void sendMessage(QString Qmessage);
+    void readMessage();
+    void MessageJudge(QStringList info);//消息选择函数
+    void EventTriggering(QStringList info);//事件处理函数
+    void LoginFeedback(QStringList info);//登陆反馈函数
+    void RegistrationFeedback(QStringList info);//注册反馈函数
+    void CreateFeedback(QStringList info);//创建反馈函数
+    void BeginFunc(QStringList info);//玩家回合开始函数
+
+private slots:
+    void on_RegistpushButton_clicked();
+    void on_LoginpushButton_clicked();
+
+public slots:
+    void regist(QString);//接受注册消息的槽
+
+public:
+    RegistMainWindow *m_registWin;
+    RoomMainWindow *m_roomWin;
+    gameWindow *m_gameWin;
+
+private:
+    Ui::LoginMainWindow *ui;
+    QTcpSocket *m_tcpsocket;
+
+
+};
+
+#endif // LOGINMAINWINDOW_H

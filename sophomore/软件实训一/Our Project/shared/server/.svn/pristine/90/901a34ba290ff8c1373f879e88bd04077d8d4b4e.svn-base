@@ -1,0 +1,97 @@
+#include "widget.h"
+#include "ui_widget.h"
+#include"function.h"
+
+//设置数据库连接，信号和槽
+Widget::Widget(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::Widget)
+{
+    ui->setupUi(this);
+
+    m_tcpserver = new QTcpServer(this);
+    m_tcpsocket = new QTcpSocket(this);
+    socket_list = new QList<QTcpSocket*>;
+    m_tcpserver->listen(QHostAddress::Any,6666);
+
+    connect(m_tcpserver,SIGNAL(newConnection()),
+            this,SLOT(newConnect()));
+
+
+
+}
+
+//析构函数
+Widget::~Widget()
+{
+    delete ui;
+    AccountData.close();
+}
+
+//连接函数，创建列表保存与客户端的连接
+void Widget::newConnect()
+{
+
+    m_tcpsocket = m_tcpserver->nextPendingConnection();
+
+    socket_list->append(m_tcpsocket);
+
+    connect(m_tcpsocket,SIGNAL(readyRead()),
+            this,SLOT(readMessage()));
+
+
+}
+
+//接收消息，调取Function类来分类处理
+void Widget::readMessage()
+{
+    qDebug() << "server message" << message;
+    for(int i = 0;i < socket_list->length();i ++)
+    {
+        qDebug() << "QDataStream " ;
+        QDataStream in(socket_list->at(i));
+        in.setVersion (QDataStream::Qt_5_4);
+        in >> message;
+        if(!(message.isEmpty()))
+        {
+            scoketnumber=i;
+            qDebug() << "break " ;
+            break;
+        }
+    }
+    ui->textBrowser->append(tr("reveived client message: '%1'").arg(message));
+    QStringList info = message.split("|");
+    Function func(info,message,scoketnumber);
+
+}
+
+//发送消息，用于将消息发送至客户端
+void Widget::sendMessage(QString infomation,int id)
+{
+    QString str = infomation;
+    QByteArray message;
+    QDataStream out(&message,QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_4);
+    out<<str;
+    if(id==-1)
+    {
+        for (int i = 0;i < socket_list->length();i ++)
+        {
+            socket_list->at(i)->write(message);
+        }
+    }
+    else
+    {
+        socket_list->at(id)->write(message);
+    }
+}
+
+//用于测试消息发送的按钮
+void Widget::on_pushButton_clicked()
+{
+    QString ser = "group";
+    string = ser + "|" + ui->lineEdit->text() + "|" + "0";
+    sendMessage(string);
+    ui->lineEdit->clear();
+}
+

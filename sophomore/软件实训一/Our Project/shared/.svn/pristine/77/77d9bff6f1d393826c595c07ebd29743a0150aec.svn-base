@@ -1,0 +1,47 @@
+#ifndef WIDGET_H
+#define WIDGET_H
+
+#include <QWidget>
+#include <QTcpServer>
+#include <QTcpSocket>
+#include <QList>
+#include <QDebug>
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QSqlQuery>
+
+namespace Ui {
+class Widget;
+}
+
+
+class Widget : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit Widget(QWidget *parent = 0);
+    ~Widget();
+
+
+
+
+protected slots:
+    void on_pushButton_clicked();//测试用输出按钮
+    void newConnect();//建立新的连接时的信号
+    void sendMessage(QString infomation,int id=-1);//向某一连接的客户端发送信号
+    void readMessage();//读取从客户端接受的信号
+
+protected:
+    Ui::Widget *ui;
+    QString message;
+    QString greeting;
+    QString string;
+    QTcpSocket *m_tcpsocket;
+    QTcpServer *m_tcpserver;
+    QList<QTcpSocket*> *socket_list;//将连接列成列表便于调取
+    int scoketnumber;
+    QSqlDatabase AccountData;//定义数据库连接
+};
+
+#endif // WIDGET_H

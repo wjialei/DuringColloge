@@ -1,0 +1,19 @@
+#ifndef CMESSAGEHANDING_H
+#define CMESSAGEHANDING_H
+#include<loginmainwindow.h>
+#include<QString>
+#include<QStringList>
+class CMessageHanding :public LoginMainWindow
+{
+public:
+    CMessageHanding(QStringList info);
+    void MessageJudge(QStringList info);//消息选择函数
+protected:
+    void EventTriggering(QStringList info);//事件处理函数
+    void LoginFeedback(QStringList info);//登陆反馈函数
+    void RegistrationFeedback(QStringList info);//注册反馈函数
+    void CreateFeedback(QStringList info);//创建反馈函数
+    void BeginFunc(QStringList info);//玩家回合开始函数
+};
+
+#endif // CMESSAGEHANDING_H

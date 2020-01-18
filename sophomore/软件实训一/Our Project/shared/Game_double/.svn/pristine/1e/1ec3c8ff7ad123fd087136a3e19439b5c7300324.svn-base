@@ -1,0 +1,30 @@
+#ifndef ROOMMAINWINDOW_H
+#define ROOMMAINWINDOW_H
+
+#include <QMainWindow>
+#include<QMovie>
+
+namespace Ui {
+class RoomMainWindow;
+}
+
+class RoomMainWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    explicit RoomMainWindow(QWidget *parent = nullptr);
+    ~RoomMainWindow();
+
+private slots:
+    void on_RoomPlaypushButton_clicked();
+
+signals:
+    void SendGameCreateMessage();
+
+private:
+    Ui::RoomMainWindow *ui;
+    QMovie *movie;
+};
+
+#endif // ROOMMAINWINDOW_H

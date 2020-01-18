@@ -1,0 +1,19 @@
+#include "roommainwindow.h"
+#include "ui_roommainwindow.h"
+
+RoomMainWindow::RoomMainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::RoomMainWindow)
+{
+    ui->setupUi(this);
+     setWindowTitle("东南大学霸");
+     QMovie *movie;
+     movie = new QMovie(":/image/stay.gif");
+     ui->RoomLoadinglabel->setMovie(movie);
+     movie->start();
+}
+
+RoomMainWindow::~RoomMainWindow()
+{
+    delete ui;
+}

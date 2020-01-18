@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/image">
+        <file>DNDX.png</file>
+        <file>Waved.gif</file>
+        <file>Regist.png</file>
+        <file>RegistPush.png</file>
+        <file>RegistHover.png</file>
+        <file>Login.png</file>
+        <file>LoginHover.png</file>
+        <file>LoginPush.png</file>
+        <file>PassageWay.gif</file>
+        <file>Title2.gif</file>
+        <file>Title1.png</file>
+        <file>Study.png</file>
+        <file>StudyHover.png</file>
+        <file>StudyPush.png</file>
+        <file>stay.gif</file>
+    </qresource>
+    <qresource prefix="/image2"/>
+</RCC>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>RoomMainWindow</class>
+ <widget class="QMainWindow" name="RoomMainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1072</width>
+    <height>669</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow{
+        border-image: url(:/image/DNDX.png);
+}
+/****************按钮部件*******************/
+QPushButton:hover{/*鼠标悬停在按钮上时*/
+     /*背景色*/
+	background-color: rgb(201, 255, 149);
+     border-color: rgba(255, 225, 255, 30);/*边框颜色*/
+         color:rgb(255, 170, 0);/*字体颜色*/
+     padding: 6px; /*填衬*/
+}
+
+QPushButton{ 
+     border-style: outset; /*边框样式*/
+     border-width: 4px;  /*边框宽度为4像素*/
+     border-radius: 10px; /*边框圆角半径*/
+        background-color:rgb(106, 248, 255);
+        border-color: rgba(255, 225, 255, 200);
+        
+       color:green;
+}
+
+QPushButton:pressed { /*按钮被按下时*/
+     background-color:rgba(100,255,100, 200);
+         border-color: green;
+     border-style: inset;
+        color:rgba(0, 0, 0, 100);
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="RoomDifficultylabel">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>350</y>
+      <width>161</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Print</family>
+      <pointsize>20</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 0, 0);</string>
+    </property>
+    <property name="text">
+     <string>Difficulty:</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="RoomHardradioButton">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>430</y>
+      <width>231</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Print</family>
+      <pointsize>16</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 0, 0);</string>
+    </property>
+    <property name="text">
+     <string>God of Study</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="RoomEasyradioButton">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>510</y>
+      <width>231</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Print</family>
+      <pointsize>16</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 0, 0);</string>
+    </property>
+    <property name="text">
+     <string>Dog of Study</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="RoomPlaypushButton">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>460</y>
+      <width>281</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: bold 60px;/*字体*/
+</string>
+    </property>
+    <property name="text">
+     <string>Study!</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="RoomPlayerlistWidget">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>30</y>
+      <width>391</width>
+      <height>411</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Print</family>
+      <pointsize>28</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="RoomFriendlistWidget">
+    <property name="geometry">
+     <rect>
+      <x>820</x>
+      <y>30</y>
+      <width>211</width>
+      <height>311</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="RoomInvitelabel">
+    <property name="geometry">
+     <rect>
+      <x>820</x>
+      <y>350</y>
+      <width>201</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Print</family>
+      <pointsize>16</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 0, 0);</string>
+    </property>
+    <property name="text">
+     <string>Enter ID:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="RoomInvitelineEdit">
+    <property name="geometry">
+     <rect>
+      <x>820</x>
+      <y>400</y>
+      <width>211</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Print</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="RoomInvitepushButton">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>450</y>
+      <width>191</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: bold 30px;/*字体*/</string>
+    </property>
+    <property name="text">
+     <string>Invite</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1072</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuRoom">
+    <property name="title">
+     <string>Room</string>
+    </property>
+   </widget>
+   <addaction name="menuRoom"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

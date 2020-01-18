@@ -1,0 +1,13 @@
+INPUT(
+./release\qrc_resource.o
+./release\main.o
+./release\loginmainwindow.o
+./release\classes.o
+./release\gamewindow.o
+./release\registmainwindow.o
+./release\roommainwindow.o
+./release\moc_loginmainwindow.o
+./release\moc_gamewindow.o
+./release\moc_registmainwindow.o
+./release\moc_roommainwindow.o
+);

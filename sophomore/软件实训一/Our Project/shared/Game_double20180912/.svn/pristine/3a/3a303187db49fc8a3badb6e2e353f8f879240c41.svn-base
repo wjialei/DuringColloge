@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>RegistMainWindow</class>
+ <widget class="QMainWindow" name="RegistMainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>728</width>
+    <height>434</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow{
+        border-image: url(:/image/DNDX.png);
+}
+/****************按钮部件*******************/
+QPushButton{
+     /*背景色*/
+	background-color: rgb(201, 255, 149);
+     border-style: outset; /*边框样式*/
+     border-width: 4px;  /*边框宽度为4像素*/
+     border-radius: 10px; /*边框圆角半径*/
+     border-color: rgba(255, 225, 255, 30);/*边框颜色*/
+     font: bold 40px;/*字体*/
+         color:rgba(0, 0, 0, 100);/*字体颜色*/
+     padding: 6px; /*填衬*/
+}
+
+QPushButton:hover{ /*鼠标悬停在按钮上时*/
+        background-color:rgb(106, 248, 255);
+        border-color: rgba(255, 225, 255, 200);
+        color:rgba(0, 0, 0, 200);
+}
+
+QPushButton:pressed { /*按钮被按下时*/
+     background-color:rgba(100,255,100, 200);
+         border-color: rgba(255, 225, 255, 30);
+     border-style: inset;
+        color:rgba(0, 0, 0, 100);
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="RegistWrongCaselabel">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>300</y>
+      <width>331</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Print</family>
+      <pointsize>14</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(16, 100, 255);</string>
+    </property>
+    <property name="text">
+     <string>ID Exists!  Try Another one!</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="RegistAgainPasswordlabel">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>210</y>
+      <width>361</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Print</family>
+      <pointsize>26</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 65, 8);</string>
+    </property>
+    <property name="text">
+     <string>Password Again:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="RegistRegistpushButton">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>300</y>
+      <width>161</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>-1</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Regist</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="RegistIDlabel">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>30</y>
+      <width>211</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Print</family>
+      <pointsize>26</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 65, 8);</string>
+    </property>
+    <property name="text">
+     <string>Enter ID：</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="RegistAgainPasswordlineEdit">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>220</y>
+      <width>311</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Print</family>
+      <pointsize>20</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="RegistPasswordlabel">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>120</y>
+      <width>361</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Print</family>
+      <pointsize>26</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 65, 8);</string>
+    </property>
+    <property name="text">
+     <string>Enter Password：</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="RegistPasswordlineEdit">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>130</y>
+      <width>311</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Print</family>
+      <pointsize>20</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="RegistIDlineEdit">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>40</y>
+      <width>311</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Segoe Print</family>
+      <pointsize>20</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>728</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuRegist">
+    <property name="title">
+     <string>Regist</string>
+    </property>
+   </widget>
+   <addaction name="menuRegist"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
